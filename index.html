@@ -96,7 +96,7 @@
     const FORM_SUFFIX = "/viewform?usp=dialog";
     const DEFAULT_FIELDS = {
       dates: "entry.1000600160",
-      guests: "entry.1939867577",
+      name: "entry.1939867577",
       phone: "entry.1118172997"
     };
   </script>
@@ -128,7 +128,8 @@
       const dates = params.get("dates");
       const guests = params.get("guests");
       const phone = params.get("phone");
-    
+      const name = params.get("name");
+
       if (!apt || !APARTMENTS[apt]) {
         alert("Invalid check-in link. Please contact Horizon Stay.");
         return;
@@ -145,7 +146,7 @@
         FORM_PREFIX + aptConfig.formId + FORM_SUFFIX;
     
       if (dates) formUrl += `&${fields.dates}=${encodeURIComponent(dates)}`;
-      if (guests) formUrl += `&${fields.guests}=${encodeURIComponent(guests)}`;
+      if (name) formUrl += `&${fields.name}=${encodeURIComponent(name)}`;
       if (phone) formUrl += `&${fields.phone}=${encodeURIComponent(phone)}`;
     
       window.open(formUrl, "_blank");
