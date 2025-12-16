@@ -92,6 +92,8 @@
   </style>
   
   <script>
+    const FORM_PREFIX = "https://docs.google.com/forms/d/e/";
+    const FORM_SUFFIX = "/viewform?usp=dialog";
     const DEFAULT_FIELDS = {
       dates: "entry.1000600160",
       guests: "entry.1939867577",
@@ -102,7 +104,7 @@
   <script>
     const APARTMENTS = {
       phantom3210: {
-        formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdsw60m4QopzAEFRiXvnRx-5iHQ3FsXmWyo_MK3ZUqLB06d9g/viewform"
+        formUrl: "1FAIpQLSdsw60m4QopzAEFRiXvnRx-5iHQ3FsXmWyo_MK3ZUqLB06d9g"
       },
     
       marina1: {
@@ -110,7 +112,10 @@
       },
     
       reva2623: {
-        formUrl: "https://docs.google.com/forms/d/e/1FAIpQLScqgcEpcUX18HvxArvgwFgM3FFFrq_Ga-9FnNzdecMtqb5jcA/viewform"
+        formUrl: "1FAIpQLScqgcEpcUX18HvxArvgwFgM3FFFrq_Ga-9FnNzdecMtqb5jcA",
+        fields: {
+          dates: "entry.2011497568"
+        }
       }
     };
   </script>
@@ -131,13 +136,13 @@
     
       const aptConfig = APARTMENTS[apt];
     
-      // merge defaults + overrides
       const fields = {
         ...DEFAULT_FIELDS,
         ...(aptConfig.fields || {})
       };
     
-      let formUrl = aptConfig.formUrl + "?usp=dialog";
+      let formUrl =
+        FORM_PREFIX + aptConfig.formId + FORM_SUFFIX;
     
       if (dates) formUrl += `&${fields.dates}=${encodeURIComponent(dates)}`;
       if (guests) formUrl += `&${fields.guests}=${encodeURIComponent(guests)}`;
@@ -164,14 +169,6 @@
     </p>
 
     <!-- BUTTON -->
-    <!-- <a
-      class="checkin-btn"
-      href="https://docs.google.com/forms/d/e/1FAIpQLSdsw60m4QopzAEFRiXvnRx-5iHQ3FsXmWyo_MK3ZUqLB06d9g/viewform"
-      target="_blank"
-    >
-      Start Online Check-in
-    </a> -->
-
     <a class="checkin-btn" href="#" onclick="openCheckinForm(); return false;">
       Start Online Check-in
     </a>
