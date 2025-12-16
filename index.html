@@ -89,6 +89,49 @@
         font-size: 1rem;
       }
     }
+
+
+    .gradient-text {
+  background: linear-gradient(90deg, #ffedbc, #ed4264);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome-box {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.welcome-small {
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.guest-name {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.apartment-label {
+  font-size: 13px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-top: 16px;
+}
+
+.apartment-name {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.divider {
+  width: 60px;
+  height: 2px;
+  margin: 16px auto;
+  background: linear-gradient(90deg, #ffedbc, #ed4264);
+}
   </style>
   
   <script>
@@ -96,7 +139,7 @@
     const FORM_SUFFIX = "/viewform?usp=dialog";
     const DEFAULT_FIELDS = {
       dates: "entry.1000600160",
-      name: "entry.1939867577",
+      guests: "entry.1939867577",
       phone: "entry.1118172997"
     };
   </script>
@@ -128,7 +171,6 @@
       const dates = params.get("dates");
       const guests = params.get("guests");
       const phone = params.get("phone");
-      const name = params.get("name");
 
       if (!apt || !APARTMENTS[apt]) {
         alert("Invalid check-in link. Please contact Horizon Stay.");
@@ -146,7 +188,7 @@
         FORM_PREFIX + aptConfig.formId + FORM_SUFFIX;
     
       if (dates) formUrl += `&${fields.dates}=${encodeURIComponent(dates)}`;
-      if (name) formUrl += `&${fields.name}=${encodeURIComponent(name)}`;
+      if (guests) formUrl += `&${fields.guests}=${encodeURIComponent(guests)}`;
       if (phone) formUrl += `&${fields.phone}=${encodeURIComponent(phone)}`;
     
       window.open(formUrl, "_blank");
@@ -156,6 +198,16 @@
 
 <body>
   <div class="container">
+
+    <div class="welcome-box">
+  <p class="welcome-small">Welcome</p>
+  <h2 class="guest-name" id="guestName">Guest</h2>
+
+  <div class="divider"></div>
+
+  <p class="apartment-label">Your Apartment</p>
+  <h3 class="apartment-name" id="apartmentName">Apartment Name</h3>
+</div>
     <!-- BRAND IMAGE -->
     <img
       src="https://imgpx.com/en/4xRV1lONL4Ru.png"
