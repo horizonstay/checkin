@@ -32,20 +32,62 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
     }
 
-    /* Gradient text utility */
     .gradient-text {
       background: linear-gradient(90deg, #ed4264, #ffedbc);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .brand-image {
+    /* --- SKELETON & ANIMATION STYLES --- */
+    
+    .image-wrapper {
       max-width: 400px;
       width: 100%;
       margin: 0 auto 32px;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Only apply skeleton background/height if 'skeleton' class is present */
+    .image-wrapper.skeleton {
+      min-height: 150px; 
+      background-color: rgba(255, 255, 255, 0.05); 
+      background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.05) 25%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.05) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .brand-image {
+      width: 100%;
+      height: auto;
       display: block;
+      opacity: 0; /* Hidden by default */
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    /* Normal load: Fade in */
+    .brand-image.loaded {
+      opacity: 1;
+    }
+
+    /* Cached load: Show INSTANTLY (no fade) */
+    .brand-image.cached {
+      opacity: 1;
+      transition: none !important;
     }
     
+    /* --- END STYLES --- */
+
     .message {
       font-size: 0.9rem;
       line-height: 1.7;
@@ -64,6 +106,7 @@
       background: linear-gradient(90deg, #ed4264, #ffedbc);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
       box-shadow: 0 10px 30px rgba(237, 66, 100, 0.35);
+      cursor: pointer;
     }
 
     .checkin-btn:hover {
@@ -71,7 +114,7 @@
       box-shadow: 0 15px 40px rgba(237, 66, 100, 0.5);
     }
 
-   footer {
+    footer {
       margin-top: 40px;
       font-size: 0.85rem;
       color: rgba(255, 255, 255, 0.3);
@@ -81,84 +124,36 @@
       .container {
         padding: 32px 22px 40px;
       }
-
       .brand-image {
         max-width: 520px;
       }
-      
       .message {
         font-size: 1rem;
       }
     }
   </style>
-  
+
   <script>
     const FORM_PREFIX = "https://docs.google.com/forms/d/e/";
     const FORM_SUFFIX = "/viewform?usp=dialog";
-    const DEFAULT_FIELDS = {
-      dates: "entry.1000600160",
-      guests: "entry.1939867577",
-      phone: "entry.1118172997"
-    };
-  </script>
-
-  <script>
+    const DEFAULT_FIELDS = { dates: "entry.1000600160", guests: "entry.1939867577", phone: "entry.1118172997" };
+    
     const APARTMENTS = {
-      1: {
-        formId: "1FAIpQLScqgcEpcUX18HvxArvgwFgM3FFFrq_Ga-9FnNzdecMtqb5jcA",
-        fields: {
-          dates: "entry.2011497568"
-        }
-      },
-      2: {
-        formId: "1FAIpQLSfZAgEd9eHj_9Uj9qTZnDCG8T8JcrjKM7aDUlUIw1DRNbrTOQ"
-      },
-      3: {
-        formId: "1FAIpQLScRTNXV-HL7gqIfozFyYHnTVTNO5DCdPZxtMvxm0OOqov4lDg",
-        fields: {
-          dates: "entry.79452659"
-        }
-      },
-      4: {
-        formId: "1FAIpQLScRJ-hgUkp6_QFhtxVBLs7LmXlmn1U-z10G61AEv6v4GQu2Lg",
-        fields: {
-          dates: "entry.243356442"
-        }
-      },
-      5: {
-        formId: "1FAIpQLSdsJWbTDExhlk9BhSFMivTBftICB01leI7KEyKvwItUgyXDKA",
-          fields: {
-          dates: "entry.79452659"
-        }
-      },
-      6: {
-        formId: "1FAIpQLSfi1iLU9q9sWaBdRZBsIu0Y-UCiSrtkHFjlQmfLCUUE0mLDwA"
-      },
-      7: {
-        formId: "1FAIpQLScxUfuldcuK56RSeEg7Mva_50MuwdBTJCZOY-bMKP4F2shdpQ",
-        fields: {
-          dates: "entry.79452659"
-        }
-      },
-      8: {
-        formId: "1FAIpQLScsqk1bUh9mv-rDccVAc5Uot_Tc0vHDI5x1drN0rmYo_ttbTw"
-      },
-      9: {
-        formId: "1FAIpQLSfVBZbdauFDsWXFDRxY68Q8oblNbdSnQPg_ouHdMSwc_OQ68A"
-      },
-      10: {
-        formId: "1FAIpQLSdsw60m4QopzAEFRiXvnRx-5iHQ3FsXmWyo_MK3ZUqLB06d9g"
-      },
-      11: {
-        formId: "1FAIpQLSd3rWgY5Aw3ev3tMHAY2hQwUTOG67rK_1g7KeuEJ5ZcS1vCng"
-      }
+      1: { formId: "1FAIpQLScqgcEpcUX18HvxArvgwFgM3FFFrq_Ga-9FnNzdecMtqb5jcA", fields: { dates: "entry.2011497568" } },
+      2: { formId: "1FAIpQLSfZAgEd9eHj_9Uj9qTZnDCG8T8JcrjKM7aDUlUIw1DRNbrTOQ" },
+      3: { formId: "1FAIpQLScRTNXV-HL7gqIfozFyYHnTVTNO5DCdPZxtMvxm0OOqov4lDg", fields: { dates: "entry.79452659" } },
+      4: { formId: "1FAIpQLScRJ-hgUkp6_QFhtxVBLs7LmXlmn1U-z10G61AEv6v4GQu2Lg", fields: { dates: "entry.243356442" } },
+      5: { formId: "1FAIpQLSdsJWbTDExhlk9BhSFMivTBftICB01leI7KEyKvwItUgyXDKA", fields: { dates: "entry.79452659" } },
+      6: { formId: "1FAIpQLSfi1iLU9q9sWaBdRZBsIu0Y-UCiSrtkHFjlQmfLCUUE0mLDwA" },
+      7: { formId: "1FAIpQLScxUfuldcuK56RSeEg7Mva_50MuwdBTJCZOY-bMKP4F2shdpQ", fields: { dates: "entry.79452659" } },
+      8: { formId: "1FAIpQLScsqk1bUh9mv-rDccVAc5Uot_Tc0vHDI5x1drN0rmYo_ttbTw" },
+      9: { formId: "1FAIpQLSfVBZbdauFDsWXFDRxY68Q8oblNbdSnQPg_ouHdMSwc_OQ68A" },
+      10: { formId: "1FAIpQLSdsw60m4QopzAEFRiXvnRx-5iHQ3FsXmWyo_MK3ZUqLB06d9g" },
+      11: { formId: "1FAIpQLSd3rWgY5Aw3ev3tMHAY2hQwUTOG67rK_1g7KeuEJ5ZcS1vCng" }
     };
-  </script>
-  
-  <script>
+
     function openCheckinForm() {
       const params = new URLSearchParams(window.location.search);
-    
       const apt = params.get("apt");
       const dates = params.get("dates");
       const guests = params.get("guests");
@@ -168,21 +163,15 @@
         alert("Invalid check-in link. Please contact Horizon Stay.");
         return;
       }
-    
+      
       const aptConfig = APARTMENTS[apt];
-    
-      const fields = {
-        ...DEFAULT_FIELDS,
-        ...(aptConfig.fields || {})
-      };
-    
-      let formUrl =
-        FORM_PREFIX + aptConfig.formId + FORM_SUFFIX;
-    
+      const fields = { ...DEFAULT_FIELDS, ...(aptConfig.fields || {}) };
+      let formUrl = FORM_PREFIX + aptConfig.formId + FORM_SUFFIX;
+      
       if (dates) formUrl += `&${fields.dates}=${encodeURIComponent(dates)}`;
       if (guests) formUrl += `&${fields.guests}=${encodeURIComponent(guests)}`;
       if (phone) formUrl += `&${fields.phone}=${encodeURIComponent(phone)}`;
-    
+      
       window.open(formUrl, "_blank");
     }
   </script>
@@ -190,26 +179,53 @@
 
 <body>
   <div class="container">
-    <!-- BRAND IMAGE -->
-    <img
-      src="https://imagizer.imageshack.com/img922/3695/JUdDRN.png"
-      alt="Horizon Stay"
-      class="brand-image"
-    />
+    
+    <div class="image-wrapper skeleton" id="logoWrapper">
+      <img
+        src="https://imagizer.imageshack.com/img922/3695/JUdDRN.png"
+        alt="Horizon Stay"
+        class="brand-image"
+        id="brandLogo"
+      />
+    </div>
 
-    <!-- MESSAGE -->
     <p class="message gradient-text">
       We’re excited to have you stay with us. Please click the button below to
       complete your online check-in. It only takes a few minutes.
     </p>
 
-    <!-- BUTTON -->
     <button class="checkin-btn" onclick="openCheckinForm()"> Start Online Check-in </button>
 
-    <!-- FOOTER -->
     <footer>
       © 2025 Horizon Stay. All rights reserved.
     </footer>
   </div>
+
+  <script>
+    (function() {
+      const img = document.getElementById('brandLogo');
+      const wrapper = document.getElementById('logoWrapper');
+
+      // Helper function to show image
+      function showImage(isCached) {
+        // If cached, use 'cached' class (no transition). 
+        // If new load, use 'loaded' class (fade transition).
+        const className = isCached ? 'cached' : 'loaded';
+        
+        img.classList.add(className);
+        wrapper.classList.remove('skeleton');
+      }
+
+      // Check if the image is already complete (cached)
+      if (img.complete) {
+        showImage(true);
+      } else {
+        // Not cached, wait for load
+        img.onload = function() {
+          showImage(false);
+        };
+      }
+    })();
+  </script>
 </body>
 </html>
